@@ -1,0 +1,27 @@
+{
+  "name": "js-summative-lab-trivia-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "js-summative-lab-trivia-cli": "bin/main.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/se-christopher-perez/js-summative-lab-trivia-cli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/se-christopher-perez/js-summative-lab-trivia-cli/issues"
+  },
+  "homepage": "https://github.com/se-christopher-perez/js-summative-lab-trivia-cli#readme",
+  "dependencies": {
+    "@inquirer/prompts": "^8.4.1"
+  }
+}
