@@ -11,27 +11,42 @@ let record = stats
 export async function mainMenu() {
 
     const selectAction = await select({
+
         message: "Trivia: Main Menu",
+
         choices: [
+
             { name: "Play Game", value: "start" },
             { name: "Stats", value: "stats" },
             { name: "See Questions", value: "questions" },
             { name: "Settings", value: "settings" },
             { name: "Quit", value: "quit" }
+
         ],
+
         loop: false
     })
 
     if (selectAction === "start") {
+
         playGame()
+
     } else if (selectAction === "stats") {
-        console.log(record)
+
+        statMenu()
+
     } else if (selectAction === "questions") {
+
         questionMenu()
+
     } else if (selectAction === "settings") {
+
         settingsMenu()
+
     } else if (selectAction === "quit") {
+
         console.log("Thank you, goodbye!")
+
     }
 
 }
@@ -42,7 +57,22 @@ export async function mainMenu() {
 
 export async function playGame() {
 
-    for(const element of data) {
+    const roundRecord = {
+
+        right: 0,
+        wrong: 0
+
+    }
+
+    const gameTimer = setTimeout(() => {
+
+        console.log("TOO SLOW!")
+
+        mainMenu()
+
+    }, 5000)
+
+    for (const element of data) {
 
         const answer = await input({
 
@@ -51,23 +81,64 @@ export async function playGame() {
         })
 
         if (answer.toLowerCase() === element["answer"].toLowerCase()) {
-            
+
             record["right"] += 1
+
+            roundRecord["right"] += 1
 
         } else {
 
             record["wrong"] += 1
 
+            roundRecord["wrong"] += 1
+
         }
 
     }
 
-    console.log(record)
+    clearTimeout(gameTimer)
+
+    console.log(roundRecord)
+    record["gamesPlayed"] += 1
+
     await mainMenu()
 
 }
 
 ///////////PLAY GAME///////////
+
+///////////STATS///////////
+
+export async function statMenu() {
+
+    console.log(`Total Games Played: ${record["gamesPlayed"]}`)
+
+    console.log(`Right Answers: ${record["right"]}`)
+
+    console.log(`Wrong Answers: ${record["wrong"]}`)
+
+    const selectAction = await select({
+
+        message: "Your Stats",
+
+        choices: [
+
+            { name: "Back", value: "back" }
+
+        ],
+
+        loop: false
+    })
+
+    if (selectAction === "back") {
+
+        await mainMenu()
+
+    }
+
+}
+
+///////////STATS///////////
 
 
 ///////////QUESTIONS///////////
@@ -102,7 +173,7 @@ export async function questionMenu() {
 
 export async function settingsMenu() {
 
-const selectAction = await select({
+    const selectAction = await select({
         message: "Settings",
         choices: [
             { name: "Difficulty", value: "difficulty" },
@@ -124,7 +195,7 @@ const selectAction = await select({
 
 export async function difficultyMenu() {
 
-const selectAction = await select({
+    const selectAction = await select({
         message: "Select Topics",
         choices: [
             { name: "Easy", value: "easy" },
@@ -137,13 +208,13 @@ const selectAction = await select({
 
     if (selectAction === "back") {
         await settingsMenu()
-    } 
+    }
 
 }
 
 export async function topicMenu() {
 
-const selectAction = await select({
+    const selectAction = await select({
         message: "Select Topics",
         choices: [
             { name: "All", value: "all" },
@@ -171,25 +242,25 @@ const selectAction = await select({
         data = triviaQuestions.filter((element) => element["topic"] === "movies/television")
 
         await settingsMenu()
-        
+
     } else if (selectAction === "geography") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "geography")
 
         await settingsMenu()
-        
+
     } else if (selectAction === "history") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "history")
 
         await settingsMenu()
-        
+
     } else if (selectAction === "science") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "science")
 
         await settingsMenu()
-        
+
     }
 
 }
