@@ -2,7 +2,9 @@
 import { select, input, Separator } from '@inquirer/prompts';
 import { triviaQuestions } from './triviaQuestions.js';
 
-const data = triviaQuestions
+let data = triviaQuestions
+
+///////////MAIN MENU///////////
 
 export async function mainMenu() {
 
@@ -10,7 +12,7 @@ export async function mainMenu() {
         message: "Main Menu",
         choices: [
             { name: "Start Game", value: "start" },
-            { name: "See stat", value: "stat" },
+            { name: "Stats", value: "stat" },
             { name: "See Questions", value: "questions" },
             { name: "Settings", value: "settings" },
             { name: "Quit", value: "quit" }
@@ -31,6 +33,8 @@ export async function mainMenu() {
     }
 
 }
+
+///////////MAIN MENU///////////
 
 ///////////QUESTIONS///////////
 
@@ -120,7 +124,37 @@ const selectAction = await select({
 
     if (selectAction === "back") {
         await settingsMenu()
-    } 
+    } else if (selectAction === "all") {
+
+        data = triviaQuestions
+
+        await settingsMenu()
+
+    } else if (selectAction === "movies/television") {
+
+        data = triviaQuestions.filter((element) => element["topic"] === "movies/television")
+
+        await settingsMenu()
+        
+    } else if (selectAction === "geography") {
+
+        data = triviaQuestions.filter((element) => element["topic"] === "geography")
+
+        await settingsMenu()
+        
+    } else if (selectAction === "history") {
+
+        data = triviaQuestions.filter((element) => element["topic"] === "history")
+
+        await settingsMenu()
+        
+    } else if (selectAction === "science") {
+
+        data = triviaQuestions.filter((element) => element["topic"] === "science")
+
+        await settingsMenu()
+        
+    }
 
 }
 
