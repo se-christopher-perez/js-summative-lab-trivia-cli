@@ -1,8 +1,10 @@
 
 import { select, input, Separator } from '@inquirer/prompts';
 import { triviaQuestions } from './triviaQuestions.js';
+import { stats } from './stats.js';
 
 let data = triviaQuestions
+let record = stats
 
 ///////////MAIN MENU///////////
 
@@ -12,7 +14,7 @@ export async function mainMenu() {
         message: "Trivia: Main Menu",
         choices: [
             { name: "Play Game", value: "start" },
-            { name: "Stats", value: "stat" },
+            { name: "Stats", value: "stats" },
             { name: "See Questions", value: "questions" },
             { name: "Settings", value: "settings" },
             { name: "Quit", value: "quit" }
@@ -23,7 +25,7 @@ export async function mainMenu() {
     if (selectAction === "start") {
         playGame()
     } else if (selectAction === "stats") {
-        console.log(selectAction)
+        console.log(record)
     } else if (selectAction === "questions") {
         questionMenu()
     } else if (selectAction === "settings") {
@@ -49,12 +51,19 @@ export async function playGame() {
         })
 
         if (answer.toLowerCase() === element["answer"].toLowerCase()) {
-            console.log("+1")
+            
+            record["right"] += 1
+
         } else {
-            console.log("0")
+
+            record["wrong"] += 1
+
         }
 
     }
+
+    console.log(record)
+    await mainMenu()
 
 }
 
