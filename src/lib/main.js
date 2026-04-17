@@ -9,9 +9,9 @@ let data = triviaQuestions
 export async function mainMenu() {
 
     const selectAction = await select({
-        message: "Main Menu",
+        message: "Trivia: Main Menu",
         choices: [
-            { name: "Start Game", value: "start" },
+            { name: "Play Game", value: "start" },
             { name: "Stats", value: "stat" },
             { name: "See Questions", value: "questions" },
             { name: "Settings", value: "settings" },
@@ -21,7 +21,7 @@ export async function mainMenu() {
     })
 
     if (selectAction === "start") {
-        console.log(selectAction)
+        playGame()
     } else if (selectAction === "stats") {
         console.log(selectAction)
     } else if (selectAction === "questions") {
@@ -29,12 +29,37 @@ export async function mainMenu() {
     } else if (selectAction === "settings") {
         settingsMenu()
     } else if (selectAction === "quit") {
-        console.log(selectAction)
+        console.log("Thank you, goodbye!")
     }
 
 }
 
 ///////////MAIN MENU///////////
+
+///////////PLAY GAME///////////
+
+export async function playGame() {
+
+    for(const element of data) {
+
+        const answer = await input({
+
+            message: element["question"]
+
+        })
+
+        if (answer.toLowerCase() === element["answer"].toLowerCase()) {
+            console.log("+1")
+        } else {
+            console.log("0")
+        }
+
+    }
+
+}
+
+///////////PLAY GAME///////////
+
 
 ///////////QUESTIONS///////////
 
@@ -57,7 +82,7 @@ export async function questionMenu() {
         await mainMenu()
     } else {
         console.log(selectAction)
-        await displayQuestions()
+        await questionMenu()
     };
 
 }
@@ -123,7 +148,9 @@ const selectAction = await select({
     })
 
     if (selectAction === "back") {
+
         await settingsMenu()
+
     } else if (selectAction === "all") {
 
         data = triviaQuestions
