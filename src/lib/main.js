@@ -99,9 +99,10 @@ export async function playGame() {
 
             endGame = true
 
-            console.log(`\n\n ⏰ TIME IS UP! ⏰ \n\n Round Over! Correct: ${chalk.green(roundRecord["right"])} Incorrect: ${chalk.red(roundRecord["wrong"])} \n\n Press Enter to return to menu.`)
+            console.log(`\n\n ⏰ TIME IS UP! ⏰ \n\n Round Over!\n\n Correct: ${chalk.green(roundRecord["right"])} Incorrect: ${chalk.red(roundRecord["wrong"])} \n\n Press Enter to return to main menu\n\n`)
 
         }
+
     }, gameModeSetting["time"])
 
     for (const element of data) {
@@ -141,11 +142,18 @@ export async function playGame() {
 
     clearTimeout(gameTimer)
 
-    endGame = true
-
     record["gamesPlayed"] += 1
 
-    console.log("\nRound Over!", roundRecord)
+    console.log(`Completed! Correct: ${chalk.green(roundRecord["right"])} Incorrect: ${chalk.red(roundRecord["wrong"])} \n\n`)
+
+    if(!endGame) {
+
+
+    await input({ message: `Press Enter to return to main menu` })
+
+    }
+
+    endGame = true
 
     await mainMenu()
 
@@ -221,9 +229,9 @@ export async function questionMenu() {
     } else {
 
         console.log(selectAction)
-        
+
         await questionMenu()
-    
+
     }
 
 }
@@ -362,7 +370,7 @@ export async function topicMenu() {
     } else if (selectAction === "movies/television") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "movies/television")
-        
+
         gameModeSetting["topic"] = "Movies/Television"
 
         console.clear()
