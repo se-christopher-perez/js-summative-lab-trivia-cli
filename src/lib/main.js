@@ -4,6 +4,8 @@ import { select, input } from '@inquirer/prompts'
 import { triviaQuestions } from './triviaQuestions.js'
 import { stats } from './stats.js'
 
+
+//Global Variables to mimic my database
 let data = triviaQuestions
 let record = stats
 const gameModeSetting = {
@@ -18,13 +20,16 @@ const gameModeSetting = {
 
 export async function mainMenu() {
 
+    //Console clear is used to give the user a clean game space at all time
     console.clear()
 
+    //This section is a summary of the games rules
     const timeLimit = gameModeSetting["time"] / 1000
     const numberQuestions = data.length
 
     console.log(`Mode: ${chalk.yellow(gameModeSetting["mode"])} Time Limit: ${chalk.yellow(timeLimit + " seconds")} \n Topics: ${chalk.yellow(gameModeSetting["topic"])} Total Questions: ${chalk.yellow(numberQuestions)}`)
 
+    // first Selection, allowing users to navigate through the game interface, also the use of async javascript
     const selectAction = await select({
 
         message: "Trivia Mania: Main Menu",
@@ -39,34 +44,37 @@ export async function mainMenu() {
 
         ],
 
+        // use of loop to prevent future large lists or options from endlessly looping 
         loop: false
     })
 
-    if (selectAction === "start") {
+    //Each selection leads the user to a unique menu
+    if (selectAction === "start") { //play!
 
         console.clear()
 
         playGame()
 
-    } else if (selectAction === "stats") {
+    } else if (selectAction === "stats") { //view you progress
 
         console.clear()
 
         statMenu()
 
-    } else if (selectAction === "questions") {
+    } else if (selectAction === "questions") { // explore questions 
 
         console.clear()
 
         questionMenu()
 
-    } else if (selectAction === "settings") {
+    } else if (selectAction === "settings") { //customizes game
 
         console.clear()
 
         settingsMenu()
 
-    } else if (selectAction === "quit") {
+
+    } else if (selectAction === "quit") { // exits game
 
         console.clear()
 
@@ -84,8 +92,10 @@ export async function playGame() {
 
     console.clear()
 
+    // a boolean to check if the game is in progress or not
     let endGame = false
 
+    //function scope variable to keep track of users game results
     const roundRecord = {
 
         right: 0,
@@ -93,6 +103,7 @@ export async function playGame() {
 
     }
 
+    //a timer is set to execute the code ending the game if the user hasnt completed the game
     const gameTimer = setTimeout(() => {
 
         if (!endGame) {
@@ -105,6 +116,8 @@ export async function playGame() {
 
     }, gameModeSetting["time"])
 
+
+    //use of loops to navigate through the question database
     for (const element of data) {
 
         if (endGame) break
@@ -121,18 +134,23 @@ export async function playGame() {
 
         }
 
+        //here the game provides feedback for the user
         if (answer.toLowerCase() === element["answer"].toLowerCase()) {
 
+            //keeping track of the users record in a global database
             record["right"] += 1
 
+            //keeping track of the users record in a function scope database
             roundRecord["right"] += 1
 
             console.log(chalk.green("\n✅ CORRECT\n"))
 
         } else {
 
+            //keeping track of the users record in a global database
             record["wrong"] += 1
 
+            //keeping track of the users record in a function scope database
             roundRecord["wrong"] += 1
 
             console.log(chalk.red("\n❌ INCORRECT\n"))
@@ -140,21 +158,26 @@ export async function playGame() {
         }
     }
 
+    // endint the execution of the set timer
     clearTimeout(gameTimer)
 
+    //keeping track of the users record in a global database
     record["gamesPlayed"] += 1
 
     console.log(`Completed! Correct: ${chalk.green(roundRecord["right"])} Incorrect: ${chalk.red(roundRecord["wrong"])} \n\n`)
 
+    
+    // if user completes the quiz it will guide them out with results
     if (!endGame) {
-
 
         await input({ message: `Press Enter to return to main menu` })
 
     }
 
+    // ending the game in progress at the end if user completes quiz
     endGame = true
 
+    // return to main menu
     await mainMenu()
 
 }
@@ -165,6 +188,7 @@ export async function playGame() {
 
 export async function statMenu() {
 
+    // showcasing global datbase of all games
     console.log(`Total Games Played: ${chalk.yellow(record["gamesPlayed"])}`)
 
     console.log(`Right Answers: ${chalk.green(record["right"])}`)
@@ -201,12 +225,14 @@ export async function statMenu() {
 
 export async function questionMenu() {
 
+    // use of array interation to get needed data
     let dataMap = data.map((element) => {
 
         return { name: element["question"], value: element["answer"] }
 
     })
 
+    // printing all quistion available in the database allowing users to choose and see answers
     const selectAction = await select({
 
         message: 'Select question for answer; "Back" to return to Main Menu',
@@ -228,6 +254,7 @@ export async function questionMenu() {
 
     } else {
 
+        // shows answer
         console.log(selectAction)
 
         await questionMenu()
@@ -242,6 +269,7 @@ export async function questionMenu() {
 
 export async function settingsMenu() {
 
+    // a sub menu for users to customize their games
     const selectAction = await select({
 
         message: 'Select Setting; "Back" to return to Main Menu',
@@ -295,6 +323,7 @@ export async function difficultyMenu() {
 
     })
 
+    // users change the conditions of the game based on the selections
     if (selectAction === "back") {
 
         console.clear()
@@ -369,6 +398,7 @@ export async function topicMenu() {
 
     } else if (selectAction === "movies/television") {
 
+        // use of another array iteration to properly filter desired questions based on selection
         data = triviaQuestions.filter((element) => element["topic"] === "movies/television")
 
         gameModeSetting["topic"] = "Movies/Television"

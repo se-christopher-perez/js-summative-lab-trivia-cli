@@ -23,3 +23,8 @@ Use an array iteration method at least once ("map", "filter", "reduce", etc.)
 Tools and Resources
 Text editor or Integrated Development Environment (IDE)
 GitHub
+
+Future Possible Updates
+- Question Difficulty
+- Resets
+- Users adding their own questions
