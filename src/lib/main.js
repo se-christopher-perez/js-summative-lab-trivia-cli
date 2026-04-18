@@ -9,7 +9,7 @@ let record = stats
 const gameModeSetting = {
 
     mode: "Easy",
-    time: 3000,
+    time: 30000,
     topic: "All"
 
 }
@@ -146,10 +146,10 @@ export async function playGame() {
 
     console.log(`Completed! Correct: ${chalk.green(roundRecord["right"])} Incorrect: ${chalk.red(roundRecord["wrong"])} \n\n`)
 
-    if(!endGame) {
+    if (!endGame) {
 
 
-    await input({ message: `Press Enter to return to main menu` })
+        await input({ message: `Press Enter to return to main menu` })
 
     }
 
