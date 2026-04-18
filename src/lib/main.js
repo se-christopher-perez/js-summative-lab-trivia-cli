@@ -1,15 +1,16 @@
 
-import chalk from 'chalk';
-import { select, input, Separator } from '@inquirer/prompts';
-import { triviaQuestions } from './triviaQuestions.js';
-import { stats } from './stats.js';
+import chalk from 'chalk'
+import { select, input, Separator } from '@inquirer/prompts'
+import { triviaQuestions } from './triviaQuestions.js'
+import { stats } from './stats.js'
 
 let data = triviaQuestions
 let record = stats
-const gameMode = {
+const gameModeSetting = {
 
     mode: "Easy",
-    time: 3000
+    time: 30000,
+    topic: "All"
 
 }
 
@@ -19,9 +20,13 @@ export async function mainMenu() {
 
     console.clear()
 
+    const timeLimit = gameModeSetting["time"] / 1000
+
+    console.log(`Mode: ${gameModeSetting["mode"]}, Topics: ${gameModeSetting["topic"]}, Time Limit: ${timeLimit} seconds`)
+
     const selectAction = await select({
 
-        message: "Trivia: Main Menu",
+        message: "Trivia Mania: Main Menu",
 
         choices: [
 
@@ -85,7 +90,7 @@ export async function playGame() {
         right: 0,
         wrong: 0
 
-    };
+    }
 
     const gameTimer = setTimeout(() => {
 
@@ -96,7 +101,7 @@ export async function playGame() {
             console.log("\n\n ⏰ TIME IS UP! ⏰ Press Enter to return to menu.")
 
         }
-    }, gameMode["time"]);
+    }, gameModeSetting["time"])
 
     for (const element of data) {
 
@@ -106,7 +111,7 @@ export async function playGame() {
 
             message: element["question"]
 
-        });
+        })
 
         if (endGame) {
 
@@ -122,7 +127,7 @@ export async function playGame() {
 
             roundRecord["right"] += 1
 
-            console.log(chalk.green("\n\n ✅ CORRECT"))
+            console.log(chalk.green("\n✅ CORRECT\n"))
 
         } else {
 
@@ -130,7 +135,7 @@ export async function playGame() {
 
             roundRecord["wrong"] += 1
 
-            console.log(chalk.red("\n\n ❌ WRONG"))
+            console.log(chalk.red("\n❌ WRONG\n"))
 
         }
     }
@@ -153,15 +158,15 @@ export async function playGame() {
 
 export async function statMenu() {
 
-    console.log(`Total Games Played: ${record["gamesPlayed"]}`)
+    console.log(`Total Games Played: ${chalk.yellow(record["gamesPlayed"])}`)
 
-    console.log(`Right Answers: ${record["right"]}`)
+    console.log(`Right Answers: ${chalk.green(record["right"])}`)
 
-    console.log(`Wrong Answers: ${record["wrong"]}`)
+    console.log(`Wrong Answers: ${chalk.red(record["wrong"])}`)
 
     const selectAction = await select({
 
-        message: "Your Stats",
+        message: 'Your Stats; "Back" to return to Main Menu',
 
         choices: [
 
@@ -206,7 +211,7 @@ export async function questionMenu() {
 
         loop: false
 
-    });
+    })
 
     if (selectAction === "back") {
 
@@ -220,7 +225,7 @@ export async function questionMenu() {
         
         await questionMenu()
     
-    };
+    }
 
 }
 
@@ -231,13 +236,17 @@ export async function questionMenu() {
 export async function settingsMenu() {
 
     const selectAction = await select({
-        message: "Settings",
+
+        message: 'Select Setting; "Back" to return to Main Menu',
+
         choices: [
             { name: "Difficulty", value: "difficulty" },
             { name: "Question Topics", value: "question topics" },
             { name: "Back", value: "back" }
         ],
+
         loop: false
+
     })
 
     if (selectAction === "back") {
@@ -248,9 +257,13 @@ export async function settingsMenu() {
 
     } else if (selectAction === "difficulty") {
 
+        console.clear()
+
         await difficultyMenu()
 
     } else if (selectAction === "question topics") {
+
+        console.clear()
 
         await topicMenu()
 
@@ -262,7 +275,7 @@ export async function difficultyMenu() {
 
     const selectAction = await select({
 
-        message: "Select Topics",
+        message: `Select Mode; Current Mode: ${gameModeSetting["mode"]}`,
 
         choices: [
             { name: "Easy", value: "easy" },
@@ -272,7 +285,7 @@ export async function difficultyMenu() {
         ],
 
         loop: false
-        
+
     })
 
     if (selectAction === "back") {
@@ -283,8 +296,8 @@ export async function difficultyMenu() {
 
     } else if (selectAction === "easy") {
 
-        gameMode["mode"] === "Easy"
-        gameMode["time"] === 30000
+        gameModeSetting["mode"] = "Easy"
+        gameModeSetting["time"] = 30000
 
         console.clear()
 
@@ -292,8 +305,8 @@ export async function difficultyMenu() {
 
     } else if (selectAction === "medium") {
 
-        gameMode["mode"] === "Medium"
-        gameMode["time"] === 20000
+        gameModeSetting["mode"] = "Medium"
+        gameModeSetting["time"] = 20000
 
         console.clear()
 
@@ -301,8 +314,8 @@ export async function difficultyMenu() {
 
     } else if (selectAction === "hard") {
 
-        gameMode["mode"] === "Hard"
-        gameMode["time"] === 10000
+        gameModeSetting["mode"] = "Hard"
+        gameModeSetting["time"] = 10000
 
         console.clear()
 
@@ -316,7 +329,7 @@ export async function topicMenu() {
 
     const selectAction = await select({
 
-        message: "Select Topics",
+        message: `Select Topics; Current Topics: ${gameModeSetting["topic"]}`,
 
         choices: [
             { name: "All", value: "all" },
@@ -341,6 +354,8 @@ export async function topicMenu() {
 
         data = triviaQuestions
 
+        gameModeSetting["topic"] = "All"
+
         console.clear()
 
         await settingsMenu()
@@ -348,6 +363,8 @@ export async function topicMenu() {
     } else if (selectAction === "movies/television") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "movies/television")
+        
+        gameModeSetting["topic"] = "Movies/Television"
 
         console.clear()
 
@@ -357,6 +374,8 @@ export async function topicMenu() {
 
         data = triviaQuestions.filter((element) => element["topic"] === "geography")
 
+        gameModeSetting["topic"] = "Geography"
+
         console.clear()
 
         await settingsMenu()
@@ -365,6 +384,8 @@ export async function topicMenu() {
 
         data = triviaQuestions.filter((element) => element["topic"] === "history")
 
+        gameModeSetting["topic"] = "History"
+
         console.clear()
 
         await settingsMenu()
@@ -372,6 +393,8 @@ export async function topicMenu() {
     } else if (selectAction === "science") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "science")
+
+        gameModeSetting["topic"] = "Science"
 
         console.clear()
 
