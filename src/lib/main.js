@@ -38,21 +38,31 @@ export async function mainMenu() {
 
     if (selectAction === "start") {
 
+        console.clear()
+
         playGame()
 
     } else if (selectAction === "stats") {
+
+        console.clear()
 
         statMenu()
 
     } else if (selectAction === "questions") {
 
+        console.clear()
+
         questionMenu()
 
     } else if (selectAction === "settings") {
 
+        console.clear()
+
         settingsMenu()
 
     } else if (selectAction === "quit") {
+
+        console.clear()
 
         console.log("Thank you, goodbye!")
 
@@ -143,8 +153,6 @@ export async function playGame() {
 
 export async function statMenu() {
 
-    console.clear()
-
     console.log(`Total Games Played: ${record["gamesPlayed"]}`)
 
     console.log(`Right Answers: ${record["right"]}`)
@@ -166,6 +174,8 @@ export async function statMenu() {
 
     if (selectAction === "back") {
 
+        console.clear()
+
         await mainMenu()
 
     }
@@ -179,26 +189,37 @@ export async function statMenu() {
 
 export async function questionMenu() {
 
-    console.clear()
-
     let dataMap = data.map((element) => {
+
         return { name: element["question"], value: element["answer"] }
+
     })
 
     const selectAction = await select({
+
         message: 'Select question for answer; "Back" to return to Main Menu',
+
         choices: [
             ...dataMap,
             { name: "Back", value: "back" }
         ],
+
         loop: false
+
     });
 
     if (selectAction === "back") {
+
+        console.clear()
+
         await mainMenu()
+
     } else {
+
         console.log(selectAction)
+        
         await questionMenu()
+    
     };
 
 }
@@ -232,7 +253,7 @@ export async function settingsMenu() {
     } else if (selectAction === "question topics") {
 
         await topicMenu()
-        
+
     }
 
 }
@@ -240,14 +261,18 @@ export async function settingsMenu() {
 export async function difficultyMenu() {
 
     const selectAction = await select({
+
         message: "Select Topics",
+
         choices: [
             { name: "Easy", value: "easy" },
             { name: "Medium", value: "medium" },
             { name: "Hard", value: "hard" },
             { name: "Back", value: "back" }
         ],
+
         loop: false
+        
     })
 
     if (selectAction === "back") {
@@ -261,15 +286,27 @@ export async function difficultyMenu() {
         gameMode["mode"] === "Easy"
         gameMode["time"] === 30000
 
+        console.clear()
+
+        await settingsMenu()
+
     } else if (selectAction === "medium") {
 
         gameMode["mode"] === "Medium"
         gameMode["time"] === 20000
 
+        console.clear()
+
+        await settingsMenu()
+
     } else if (selectAction === "hard") {
 
         gameMode["mode"] === "Hard"
         gameMode["time"] === 10000
+
+        console.clear()
+
+        await settingsMenu()
 
     }
 
@@ -278,7 +315,9 @@ export async function difficultyMenu() {
 export async function topicMenu() {
 
     const selectAction = await select({
+
         message: "Select Topics",
+
         choices: [
             { name: "All", value: "all" },
             { name: "Movies/Television", value: "movies/television" },
@@ -287,7 +326,9 @@ export async function topicMenu() {
             { name: "Science", value: "science" },
             { name: "Back", value: "back" }
         ],
+
         loop: false
+
     })
 
     if (selectAction === "back") {
@@ -300,11 +341,15 @@ export async function topicMenu() {
 
         data = triviaQuestions
 
+        console.clear()
+
         await settingsMenu()
 
     } else if (selectAction === "movies/television") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "movies/television")
+
+        console.clear()
 
         await settingsMenu()
 
@@ -312,17 +357,23 @@ export async function topicMenu() {
 
         data = triviaQuestions.filter((element) => element["topic"] === "geography")
 
+        console.clear()
+
         await settingsMenu()
 
     } else if (selectAction === "history") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "history")
 
+        console.clear()
+
         await settingsMenu()
 
     } else if (selectAction === "science") {
 
         data = triviaQuestions.filter((element) => element["topic"] === "science")
+
+        console.clear()
 
         await settingsMenu()
 
@@ -332,5 +383,6 @@ export async function topicMenu() {
 
 ///////////SETTINGS///////////
 
+
+// Initializes Game
 mainMenu()
-// displayQuestions()
