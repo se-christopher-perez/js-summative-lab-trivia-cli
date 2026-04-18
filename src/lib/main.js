@@ -135,7 +135,7 @@ export async function playGame() {
 
             roundRecord["wrong"] += 1
 
-            console.log(chalk.red("\n❌ Incorrect\n"))
+            console.log(chalk.red("\n❌ INCORRECT\n"))
 
         }
     }
