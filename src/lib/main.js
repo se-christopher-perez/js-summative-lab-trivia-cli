@@ -1,6 +1,6 @@
 
 import chalk from 'chalk'
-import { select, input, Separator } from '@inquirer/prompts'
+import { select, input } from '@inquirer/prompts'
 import { triviaQuestions } from './triviaQuestions.js'
 import { stats } from './stats.js'
 
@@ -94,8 +94,6 @@ export async function playGame() {
     }
 
     const gameTimer = setTimeout(() => {
-
-        const totalWrong = data.length - roundRecord["right"]
 
         if (!endGame) {
 
