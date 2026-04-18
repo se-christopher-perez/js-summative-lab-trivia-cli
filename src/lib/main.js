@@ -1,14 +1,23 @@
 
+import chalk from 'chalk';
 import { select, input, Separator } from '@inquirer/prompts';
 import { triviaQuestions } from './triviaQuestions.js';
 import { stats } from './stats.js';
 
 let data = triviaQuestions
 let record = stats
+const gameMode = {
+
+    mode: "Easy",
+    time: 3000
+
+}
 
 ///////////MAIN MENU///////////
 
 export async function mainMenu() {
+
+    console.clear()
 
     const selectAction = await select({
 
@@ -57,28 +66,45 @@ export async function mainMenu() {
 
 export async function playGame() {
 
+    console.clear()
+
+    let endGame = false
+
     const roundRecord = {
 
         right: 0,
         wrong: 0
 
-    }
+    };
 
     const gameTimer = setTimeout(() => {
 
-        console.log("TOO SLOW!")
+        if (!endGame) {
 
-        mainMenu()
+            endGame = true
 
-    }, 5000)
+            console.log("\n\n ⏰ TIME IS UP! ⏰ Press Enter to return to menu.")
+
+        }
+    }, gameMode["time"]);
 
     for (const element of data) {
+
+        if (endGame) break
 
         const answer = await input({
 
             message: element["question"]
 
-        })
+        });
+
+        if (endGame) {
+
+            console.clear()
+
+            break
+
+        }
 
         if (answer.toLowerCase() === element["answer"].toLowerCase()) {
 
@@ -86,20 +112,26 @@ export async function playGame() {
 
             roundRecord["right"] += 1
 
+            console.log(chalk.green("\n\n ✅ CORRECT"))
+
         } else {
 
             record["wrong"] += 1
 
             roundRecord["wrong"] += 1
 
-        }
+            console.log(chalk.red("\n\n ❌ WRONG"))
 
+        }
     }
 
     clearTimeout(gameTimer)
 
-    console.log(roundRecord)
+    endGame = true
+
     record["gamesPlayed"] += 1
+
+    console.log("\nRound Over!", roundRecord)
 
     await mainMenu()
 
@@ -110,6 +142,8 @@ export async function playGame() {
 ///////////STATS///////////
 
 export async function statMenu() {
+
+    console.clear()
 
     console.log(`Total Games Played: ${record["gamesPlayed"]}`)
 
@@ -144,6 +178,8 @@ export async function statMenu() {
 ///////////QUESTIONS///////////
 
 export async function questionMenu() {
+
+    console.clear()
 
     let dataMap = data.map((element) => {
         return { name: element["question"], value: element["answer"] }
@@ -184,11 +220,19 @@ export async function settingsMenu() {
     })
 
     if (selectAction === "back") {
+
+        console.clear()
+
         await mainMenu()
+
     } else if (selectAction === "difficulty") {
+
         await difficultyMenu()
+
     } else if (selectAction === "question topics") {
+
         await topicMenu()
+        
     }
 
 }
@@ -207,7 +251,26 @@ export async function difficultyMenu() {
     })
 
     if (selectAction === "back") {
+
+        console.clear()
+
         await settingsMenu()
+
+    } else if (selectAction === "easy") {
+
+        gameMode["mode"] === "Easy"
+        gameMode["time"] === 30000
+
+    } else if (selectAction === "medium") {
+
+        gameMode["mode"] === "Medium"
+        gameMode["time"] === 20000
+
+    } else if (selectAction === "hard") {
+
+        gameMode["mode"] === "Hard"
+        gameMode["time"] === 10000
+
     }
 
 }
@@ -228,6 +291,8 @@ export async function topicMenu() {
     })
 
     if (selectAction === "back") {
+
+        console.clear()
 
         await settingsMenu()
 
