@@ -9,7 +9,7 @@ let record = stats
 const gameModeSetting = {
 
     mode: "Easy",
-    time: 30000,
+    time: 3000,
     topic: "All"
 
 }
@@ -21,8 +21,9 @@ export async function mainMenu() {
     console.clear()
 
     const timeLimit = gameModeSetting["time"] / 1000
+    const numberQuestions = data.length
 
-    console.log(`Mode: ${gameModeSetting["mode"]}, Topics: ${gameModeSetting["topic"]}, Time Limit: ${timeLimit} seconds`)
+    console.log(`Mode: ${chalk.yellow(gameModeSetting["mode"])} Time Limit: ${chalk.yellow(timeLimit + " seconds")} \n Topics: ${chalk.yellow(gameModeSetting["topic"])} Total Questions: ${chalk.yellow(numberQuestions)}`)
 
     const selectAction = await select({
 
@@ -94,11 +95,13 @@ export async function playGame() {
 
     const gameTimer = setTimeout(() => {
 
+        const totalWrong = data.length - roundRecord["right"]
+
         if (!endGame) {
 
             endGame = true
 
-            console.log("\n\n ⏰ TIME IS UP! ⏰ Press Enter to return to menu.")
+            console.log(`\n\n ⏰ TIME IS UP! ⏰ \n\n Round Over! Correct: ${chalk.green(roundRecord["right"])} Incorrect: ${chalk.red(roundRecord["wrong"])} \n\n Press Enter to return to menu.`)
 
         }
     }, gameModeSetting["time"])
@@ -114,8 +117,6 @@ export async function playGame() {
         })
 
         if (endGame) {
-
-            console.clear()
 
             break
 
@@ -135,7 +136,7 @@ export async function playGame() {
 
             roundRecord["wrong"] += 1
 
-            console.log(chalk.red("\n❌ WRONG\n"))
+            console.log(chalk.red("\n❌ Incorrect\n"))
 
         }
     }
@@ -306,7 +307,7 @@ export async function difficultyMenu() {
     } else if (selectAction === "medium") {
 
         gameModeSetting["mode"] = "Medium"
-        gameModeSetting["time"] = 20000
+        gameModeSetting["time"] = 15000
 
         console.clear()
 
@@ -315,7 +316,7 @@ export async function difficultyMenu() {
     } else if (selectAction === "hard") {
 
         gameModeSetting["mode"] = "Hard"
-        gameModeSetting["time"] = 10000
+        gameModeSetting["time"] = 5000
 
         console.clear()
 
